@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FitTrack Progress</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#28a745">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Navbar is injected via components.js (fixed-top) -->
+
+  <!-- Main content with top margin to prevent overlap with navbar -->
+  <div class="container mt-5 pt-4">
+    <h2 class="text-primary mb-4">📊 <i>FitTrack Weekly Progress</i></h2>
+
+    <!-- Chart Type Toggle -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <select id="chartTypeSelector" class="form-select w-auto">
+        <option value="line">Select Chart</option>
+        <option value="line">Line Chart</option>
+        <option value="bar">Bar Chart</option>
+      </select>
+    </div>
+
+    <!-- Charts with Descriptions -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-6">
+        <p class="text-muted">📈 <b><i>Weekly Steps: Tracks your total steps taken each day.</i></b></p>
+        <canvas id="stepsChart"></canvas>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted">🔥 <b><i>Calories Burned: Displays daily calories burned based on your activity.</i></b></p>
+        <canvas id="caloriesChart"></canvas>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted">🚶‍♂️ <b><i>Distance Covered: Shows the distance (in km) you've walked or run each day.</i></b></p>
+        <canvas id="distanceChart"></canvas>
+      </div>
+      <div class="col-md-6">
+        <p class="text-muted">❤️ <b><i>Heart Rate: Monitors your average heart rate each day.</i></b></p>
+        <canvas id="heartRateChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Data Entry -->
+    <h5 class="mb-3"><i>Update Weekly Progress</i></h5>
+    <form id="dataForm" class="row g-3">
+      <div class="col-md-3">
+        <label for="day" class="form-label">Day</label>
+        <select class="form-select" id="day" required>
+          <option value="">Choose...</option>
+          <option>Mon</option><option>Tue</option><option>Wed</option>
+          <option>Thu</option><option>Fri</option><option>Sat</option><option>Sun</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Steps</label>
+        <input type="number" class="form-control" id="steps" required>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Calories</label>
+        <input type="number" class="form-control" id="calories" required>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Distance (km)</label>
+        <input type="number" step="0.1" class="form-control" id="distance" required>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Heart Rate</label>
+        <input type="number" class="form-control" id="heartRate" required>
+      </div>
+      <div class="col-md-1 d-flex align-items-end">
+        <button type="submit" class="btn btn-success w-100">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const defaultData = {
+      steps: [7000, 8000, 8200, 8500, 9000, 8700, 8420],
+      calories: [480, 510, 520, 530, 500, 540, 520],
+      distance: [4.5, 5.0, 5.1, 5.3, 5.5, 5.2, 5.3],
+      heartRate: [75, 78, 80, 79, 76, 77, 78]
+    };
+
+    let chartInstances = [];
+    let currentChartType = "line";
+
+    function getChartData() {
+      return JSON.parse(localStorage.getItem("fittrackStats")) || defaultData;
+    }
+
+    function saveChartData(data) {
+      localStorage.setItem("fittrackStats", JSON.stringify(data));
+    }
+
+    function renderCharts(type = "line") {
+      chartInstances.forEach(c => c.destroy());
+      chartInstances = [];
+
+      const data = getChartData();
+
+      const commonOptions = {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: false } }
+      };
+
+      const ctxList = [
+        { id: "stepsChart", label: "Steps", data: data.steps, color: "#0d6efd", bg: "rgba(13, 110, 253, 0.1)" },
+        { id: "caloriesChart", label: "Calories", data: data.calories, color: "#198754", bg: "rgba(25, 135, 84, 0.1)" },
+        { id: "distanceChart", label: "Distance", data: data.distance, color: "#0dcaf0", bg: "rgba(13, 202, 240, 0.1)" },
+        { id: "heartRateChart", label: "Heart Rate", data: data.heartRate, color: "#dc3545", bg: "rgba(220, 53, 69, 0.1)" }
+      ];
+
+      ctxList.forEach(item => {
+        const ctx = document.getElementById(item.id).getContext("2d");
+        const chart = new Chart(ctx, {
+          type,
+          data: {
+            labels,
+            datasets: [ {
+              label: item.label,
+              data: item.data,
+              borderColor: item.color,
+              backgroundColor: item.bg,
+              fill: true,
+              tension: 0.4
+            } ]
+          },
+          options: commonOptions
+        });
+        chartInstances.push(chart);
+      });
+    }
+
+    document.getElementById("chartTypeSelector").addEventListener("change", (e) => {
+      currentChartType = e.target.value;
+      renderCharts(currentChartType);
+    });
+
+    document.getElementById("dataForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const day = document.getElementById("day").value;
+      const stats = getChartData();
+      const index = labels.indexOf(day);
+      if (index >= 0) {
+        stats.steps[index] = +document.getElementById("steps").value;
+        stats.calories[index] = +document.getElementById("calories").value;
+        stats.distance[index] = +document.getElementById("distance").value;
+        stats.heartRate[index] = +document.getElementById("heartRate").value;
+        saveChartData(stats);
+        renderCharts(currentChartType);
+        e.target.reset();
+      }
+    });
+
+    // Initial load
+    document.addEventListener("DOMContentLoaded", () => renderCharts());
+  </script>
+  <script src="components.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
