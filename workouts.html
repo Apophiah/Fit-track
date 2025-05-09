@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#28a745" />
+  <title>FitTrack - Workouts</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="manifest" href="manifest.json"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      padding-top: 60px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+    .card {
+      border-radius: 1rem;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center mb-4 text-success">🏋️ Track Your Workouts</h2>
+
+    <!-- Add Workout Form -->
+    <div class="card p-4 mb-4 shadow">
+      <h4 class="mb-3">Add New Workout</h4>
+      <form id="workoutForm">
+        <div class="row mb-3">
+          <div class="col-md-6 mb-3">
+            <label for="type" class="form-label">Workout Type</label>
+            <select class="form-select" id="type" required>
+              <option value="">Choose...</option>
+              <option value="Cardio">Cardio</option>
+              <option value="Strength">Strength</option>
+              <option value="Flexibility">Flexibility</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" required />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6 mb-3">
+            <label for="duration" class="form-label">Duration (minutes)</label>
+            <input type="number" class="form-control" id="duration" required />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="notes" class="form-label">Notes</label>
+            <input type="text" class="form-control" id="notes" placeholder="e.g. Focused on legs" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success w-100">➕ Add Workout</button>
+      </form>
+    </div>
+
+    <!-- Export and History -->
+    <div class="d-flex justify-content-end mb-3">
+      <button class="btn btn-outline-primary" onclick="exportToPDF()">📄 Export PDF</button>
+    </div>
+
+    <div class="card p-4 shadow mb-5">
+      <h4 class="mb-3">Your Workout History</h4>
+      <ul class="list-group" id="workoutList">
+        <!-- Items will be appended by JS -->
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("workoutForm");
+    const list = document.getElementById("workoutList");
+
+    let workouts = JSON.parse(localStorage.getItem("fittrack_workouts")) || [];
+
+    const renderWorkouts = () => {
+      list.innerHTML = "";
+      if (workouts.length === 0) {
+        list.innerHTML = "<li class='list-group-item text-muted'>No workouts logged yet.</li>";
+        return;
+      }
+
+      workouts.forEach((workout, index) => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-start flex-column flex-md-row gap-2";
+
+        li.innerHTML = `
+          <div>
+            <h6 class=\"mb-1\">${workout.type} - ${workout.date}</h6>
+            <p class=\"mb-0 text-muted\">⏱️ ${workout.duration} min · 📝 ${workout.notes}</p>
+          </div>
+          <button class=\"btn btn-sm btn-outline-danger\" onclick=\"deleteWorkout(${index})\">🗑️ Delete</button>
+        `;
+
+        list.appendChild(li);
+      });
+    };
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const newWorkout = {
+        type: document.getElementById("type").value,
+        date: document.getElementById("date").value,
+        duration: document.getElementById("duration").value,
+        notes: document.getElementById("notes").value
+      };
+
+      workouts.push(newWorkout);
+      localStorage.setItem("fittrack_workouts", JSON.stringify(workouts));
+      form.reset();
+      renderWorkouts();
+    });
+
+    function deleteWorkout(index) {
+      if (confirm("Delete this workout?")) {
+        workouts.splice(index, 1);
+        localStorage.setItem("fittrack_workouts", JSON.stringify(workouts));
+        renderWorkouts();
+      }
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("Workout History", 20, 20);
+      doc.setFontSize(12);
+
+      let y = 30;
+      workouts.forEach((w, i) => {
+        doc.text(`${i + 1}. ${w.type} (${w.date}) - ${w.duration} mins`, 20, y);
+        y += 10;
+      });
+
+      doc.save("fittrack_workouts.pdf");
+    }
+
+    // Initialize
+    renderWorkouts();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+  <script src="components.js"></script>
+</body>
+</html>
