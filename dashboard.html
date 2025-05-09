@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitTrack Dashboard</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#28a745" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192" />
+  
+  <style>
+    .summary-card {
+      transition: transform 0.3s ease;
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      border-radius: 15px;
+    }
+    .summary-card:hover {
+      transform: scale(1.02);
+      background-color: rgb(0, 0, 0);
+      color: rgb(255, 255, 255);
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.822);
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 768px) {
+      #summaryStats .col-md-3, 
+      #cardsSection .col-md-4, 
+      #cardsSection .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+    @media (min-width: 769px) and (max-width: 991px) {
+      #cardsSection .col-md-4 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+      #cardsSection .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<main class="container my-5">
+  <h2 class="text-center text-primary mb-4">🏠 FitTrack Dashboard</h2>
+
+  <!-- Quick Summary Section -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 text-center mb-4" id="summaryStats">
+    <div class="col mb-3">
+      <div class="card summary-card bg-primary text-white h-100">
+        <div class="card-body">
+          <h6 class="card-title">Steps Today</h6>
+          <h3 id="steps">--</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col mb-3">
+      <div class="card summary-card bg-success text-white h-100">
+        <div class="card-body">
+          <h6 class="card-title">Calories Burned</h6>
+          <h3 id="calories">-- kcal</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col mb-3">
+      <div class="card summary-card bg-info text-white h-100">
+        <div class="card-body">
+          <h6 class="card-title">Distance</h6>
+          <h3 id="distance">-- km</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col mb-3">
+      <div class="card summary-card bg-danger text-white h-100">
+        <div class="card-body">
+          <h6 class="card-title">Heart Rate</h6>
+          <h3 id="heartRate">-- bpm</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Stats Button -->
+  <div class="text-end mb-3">
+    <button class="btn btn-outline-primary" onclick="toggleForm()">🛠️ Update Stats</button>
+  </div>
+
+  <!-- Update Stats Form -->
+  <form id="updateForm" class="card p-3 mb-5" style="display: none;">
+    <div class="row g-3">
+      <div class="col-12 col-md-3">
+        <label for="inputSteps" class="form-label">Steps</label>
+        <input type="number" class="form-control" id="inputSteps" />
+      </div>
+      <div class="col-12 col-md-3">
+        <label for="inputCalories" class="form-label">Calories</label>
+        <input type="number" class="form-control" id="inputCalories" />
+      </div>
+      <div class="col-12 col-md-3">
+        <label for="inputDistance" class="form-label">Distance (km)</label>
+        <input type="number" step="0.1" class="form-control" id="inputDistance" />
+      </div>
+      <div class="col-12 col-md-3">
+        <label for="inputHeartRate" class="form-label">Heart Rate (bpm)</label>
+        <input type="number" class="form-control" id="inputHeartRate" />
+      </div>
+    </div>
+    <button type="button" class="btn btn-success mt-3" onclick="saveStats()">💾 Save Stats</button>
+  </form>
+
+  <!-- Section Cards -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 fade-in" id="cardsSection">
+    <div class="col">
+      <div class="card shadow-sm h-100 summary-card">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">🏋️ Workouts</h5>
+          <p class="card-text flex-grow-1">View your workout plans, track exercises, and log sessions.</p>
+          <a href="workouts.html" class="btn btn-primary mt-auto">Go to Workouts</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm h-100 summary-card">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">🥗 Nutrition</h5>
+          <p class="card-text flex-grow-1">Track daily calories, log meals, and view your nutrition balance.</p>
+          <a href="nutrition.html" class="btn btn-success mt-auto">Go to Nutrition</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm h-100 summary-card">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">📈 Progress</h5>
+          <p class="card-text flex-grow-1">Visualize your fitness progress over time using interactive charts.</p>
+          <a href="progress.html" class="btn btn-info mt-auto">Go to Progress</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm h-100 summary-card">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">💬 Community</h5>
+          <p class="card-text flex-grow-1">Join discussions, share milestones, and support other users.</p>
+          <a href="community.html" class="btn btn-warning mt-auto">Join Community</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card shadow-sm h-100 summary-card">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">🙋 Profile</h5>
+          <p class="card-text flex-grow-1">View and update your account info, goals, and fitness preferences.</p>
+          <a href="profile.html" class="btn btn-dark mt-auto">Go to Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Scripts -->
+<script>
+  function loadStats() {
+    document.getElementById("steps").textContent = localStorage.getItem("steps") || "8420";
+    document.getElementById("calories").textContent = (localStorage.getItem("calories") || "520") + " kcal";
+    document.getElementById("distance").textContent = (localStorage.getItem("distance") || "5.3") + " km";
+    document.getElementById("heartRate").textContent = (localStorage.getItem("heartRate") || "78") + " bpm";
+  }
+
+  function saveStats() {
+    localStorage.setItem("steps", document.getElementById("inputSteps").value);
+    localStorage.setItem("calories", document.getElementById("inputCalories").value);
+    localStorage.setItem("distance", document.getElementById("inputDistance").value);
+    localStorage.setItem("heartRate", document.getElementById("inputHeartRate").value);
+    loadStats();
+    toggleForm();
+  }
+
+  function toggleForm() {
+    const form = document.getElementById("updateForm");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("cardsSection").classList.add("visible");
+    loadStats();
+  });
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js")
+      .then(() => console.log("✅ Service Worker Registered"))
+      .catch(err => console.error("SW registration failed:", err));
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment/min/moment.min.js"></script>
+<script src="components.js"></script>
+</body>
+</html>
