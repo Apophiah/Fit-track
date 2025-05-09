@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTrack - Your Fitness Companion</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#28a745" />
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      position: relative;
+      color: #ffffff;
+      background-image: url("g5.gif");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+     
+    }
+
+    .navbar {
+      box-shadow: 0 2px 10px rgb(38, 253, 22);
+    }
+
+    .hero {
+      background: linear-gradient(to right, #4ecc5d, #4789fa, rgb(225, 97, 97));
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
+    .feature-card {
+      border: 5px orange solid;
+      background-color: #000000;
+      border-radius: 20px red solid;
+      box-shadow: 0 10px 20px rgba(139, 229, 160, 0.05);
+      transition: transform 0.3s;
+      color: white;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background-color: rgb(255, 255, 255);
+        color: rgb(0, 0, 0);
+        box-shadow: #4789fa 20px 20px rgba(0, 255, 60, 0.05);
+        cursor: wait;
+    }
+
+
+    /* Improved quote carousel styling */
+    #quoteCarousel {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 30px auto;
+      max-width: 900px;
+    }
+    
+    .carousel-caption {
+      position: static;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 1.5rem;
+      color: #333;
+      margin: 0 auto;
+      max-width: 850px;
+    }
+    
+    .carousel-caption h5 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    
+    .carousel-caption small {
+      font-size: 1rem;
+      color: #252424;
+      font-weight: 500;
+    }
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      padding: 10px;
+    }
+
+    footer {
+      background: #000000;
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+    .text-muted{
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="fit.png" alt="FitTrack Logo" width="50" height="50" class="me-2 rounded-circle shadow-sm">
+        <span class="text-light">FitTrack</span>
+
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav" id="navLinks">
+          <!-- JS will populate this -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Welcome to FitTrack</h1>
+      <p>Your personal fitness tracker and nutrition assistant</p>
+      <a href="#" onclick="handleGetStarted()" class="btn btn-light btn-lg mt-3">Get Started</a>
+    </div>
+  </section>
+
+  <!-- Quotes Carousel -->
+  <div class="container">
+    <div id="quoteCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner text-center">
+        <div class="carousel-item active">
+          <div class="carousel-caption">
+            <h5>"Take care of your body. It's the only place you have to live."</h5>
+            <small>- Jim John</small>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-caption">
+            <h5>"The pain you feel today will be the strength you feel tomorrow."</h5>
+            <small>- Unknown</small>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="carousel-caption">
+            <h5>"Fitness is not about being better than someone else. It's about being better than you used to be."</h5>
+            <small>- Claudia Kardashian</small>
+          </div>
+        </div>
+      </div>
+      <!-- Carousel controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#quoteCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#quoteCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="container my-5">
+    <div class="row text-center mb-4">
+      <h2 class="fw-bold">What You Can Do With FitTrack</h2>
+      <p class="text-muted">Your all-in-one tool for tracking fitness, workouts, and nutrition.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card feature-card p-4 text-center h-100">
+          <div class="icon text-success"><i class="fas fa-chart-line"></i></div>
+          <h5 class="card-title">Smart Dashboard</h5>
+          <p>Visualize steps, calories, heart rate, and goals in one place.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card p-4 text-center h-100">
+          <div class="icon text-primary"><i class="fas fa-dumbbell"></i></div>
+          <h5 class="card-title">Workout Plans</h5>
+          <p>Get weekly personalized workouts tailored to your goals.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card p-4 text-center h-100">
+          <div class="icon text-danger"><i class="fas fa-apple-alt"></i></div>
+          <h5 class="card-title">Nutrition Tracker</h5>
+          <p>Log meals and monitor your daily nutritional intake easily.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p class="mb-0">&copy;2025 FitTrack. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const navLinks = document.getElementById("navLinks");
+      const user = localStorage.getItem("loggedInUser");
+
+      if (user) {
+        // Show a generic menu for logged-in users (no personal info in public page)
+        navLinks.innerHTML = `
+          <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
+        `;
+      } else {
+        navLinks.innerHTML = `
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="signup.html">Sign In</a></li>
+        `;
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      localStorage.removeItem("userDisplayName");
+      localStorage.removeItem("userId");
+      alert("Logged out successfully!");
+      window.location.href = "index.html";
+    }
+
+    function handleGetStarted() {
+      const user = localStorage.getItem("loggedInUser");
+      if (user) {
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "login.html";
+      }
+    }
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Service Worker registered:', reg))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
