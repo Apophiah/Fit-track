@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useApp } from '../context/AppContext';
 
 const AVATARCOLORS = ['#6366f1','#10b981','#ef4444','#f59e0b','#06b6d4','#a855f7'];

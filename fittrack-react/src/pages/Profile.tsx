@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { useApp } from '../context/AppContext';
 
 export default function Profile() {
@@ -132,8 +132,8 @@ export default function Profile() {
               { label:'Goal', val: goal || 'Not set' },
               { label:'Age', val: age ? `${age} years` : '-' },
               { label:'Member since', val: '2025' },
-            ].map(r => (
-              <div key={r.label} style={{ display:'flex', justifyContent:'space-between', padding:'0.5rem 0', borderBottom:`1px solid ${cardBorder}`, lastChild:{ border:'none' } }}>
+            ].map((r, i, arr) => (
+              <div key={r.label} style={{ display:'flex', justifyContent:'space-between', padding:'0.5rem 0', borderBottom: i < arr.length - 1 ? `1px solid ${cardBorder}` : 'none' }}>
                 <span style={{ fontSize:'0.82rem', color:subText, fontWeight:500 }}>{r.label}</span>
                 <span style={{ fontSize:'0.82rem', fontWeight:700, color: darkMode ? '#f1f5f9' : '#0f172a' }}>{r.val}</span>
               </div>

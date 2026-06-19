@@ -11,7 +11,7 @@ import Progress from './pages/Progress';
 import Goals from './pages/Goals';
 import Community from './pages/Community';
 import Profile from './pages/Profile';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 function ProtectedRoute({ children }: { children: ReactNode }) {
   const { currentUser } = useApp();

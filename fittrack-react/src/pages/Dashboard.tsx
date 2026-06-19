@@ -19,7 +19,7 @@ const quickNav = [
   { title: 'Profile',   icon: '👤', desc: 'Manage your account',        link: '/profile',   color: '#ef4444', bg: 'rgba(239,68,68,0.1)'   },
 ];
 
-function CircleProgress({ value, max, color, size = 80 }: { value: number; max: number; color: string; size?: number }) {
+function CircleProgress({ value, max, size = 80 }: { value: number; max: number; color?: string; size?: number }) {
   const r = (size - 10) / 2;
   const circ = 2 * Math.PI * r;
   const pct = Math.min(value / max, 1);
